@@ -1,66 +1,145 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Mata ASN Ku
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi internal untuk pengelolaan data dan proses kerja ASN dengan antarmuka modern, realtime update, serta dukungan komponen interaktif. Dibangun di atas Laravel, Livewire, TailwindCSS, dan Vite, dengan Bun sebagai package manager dan task runner frontend.
 
-## About Laravel
+## Fitur Singkat
+- Livewire komponen interaktif dan tabel dinamis (PowerGrid)
+- UI siap pakai dengan WireUI dan DaisyUI
+- Build modern via Vite + TailwindCSS
+- Realtime (Laravel Reverb/WebSocket)
+- Antrean dan monitoring via Laravel Horizon
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Teknologi yang Digunakan
+- Laravel (Framework backend)
+- Livewire, WireUI, PowerGrid (Komponen UI dan tabel)
+- TailwindCSS + DaisyUI (Styling)
+- Vite (Build tool/front-end dev server)
+- Bun (Package manager dan runner) – alternatif Node.js
+- Laravel Horizon (Queue worker/dashboard)
+- Laravel Reverb (WebSocket)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Prasyarat Sistem
+- PHP ≥ 8.2 dengan ekstensi umum (mbstring, openssl, pdo, tokenizer, xml, ctype, json)
+- Composer
+- Database: SQLite (tersedia `database/database.sqlite`) atau MySQL/PostgreSQL
+- Git
+- Bun (disarankan) atau Node.js
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Instalasi Backend (Laravel & Composer)
+Jalankan di PowerShell pada folder proyek.
 
-## Learning Laravel
+```powershell
+composer install
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+copy .env.example .env
+php artisan key:generate
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# Opsi A: SQLite (cepat untuk lokal)
+# Pastikan file ini ada: database/database.sqlite
+# Di .env atur:
+# DB_CONNECTION=sqlite
+# DB_DATABASE="/database/database.sqlite"
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Opsi B: MySQL/PostgreSQL
+# Sesuaikan DB_CONNECTION, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD
 
-## Laravel Sponsors
+php artisan migrate
+php artisan storage:link
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Instalasi Frontend (Bun)
+Install Bun di Windows (PowerShell):
 
-### Premium Partners
+```powershell
+irm bun.sh/install.ps1 | iex
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Lalu install dependensi frontend:
 
-## Contributing
+```powershell
+bun install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Menjalankan Aplikasi (Development)
+Terdapat dua cara: terintegrasi (satu perintah) atau manual (proses terpisah).
 
-## Code of Conduct
+### Opsi 1 — Terintegrasi (satu perintah)
+Menjalankan PHP server, Vite, Horizon, dan Reverb secara paralel.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```powershell
+bun run start
+```
 
-## Security Vulnerabilities
+Layanan yang berjalan:
+- Laravel (PHP) dev server: http://127.0.0.1:8000
+- Vite dev server: http://127.0.0.1:5173
+- Horizon (queue): berjalan sebagai worker + dashboard pada aplikasi Laravel
+- Reverb (WebSocket): dijalankan oleh `php artisan reverb:start --debug`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Opsi 2 — Manual (terpisah)
+Jalankan pada terminal terpisah:
 
-## License
+```powershell
+# Terminal A: Laravel
+bun run serve   # setara: php artisan serve  → http://127.0.0.1:8000
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Terminal B: Vite
+bun run dev     # Vite dev server           → http://127.0.0.1:5173
+
+# (Opsional) Terminal C: Horizon
+php artisan horizon
+
+# (Opsional) Terminal D: Reverb (WebSocket)
+php artisan reverb:start --debug
+```
+
+## Port Akses
+- Development:
+  - Aplikasi Laravel: 8000
+  - Vite: 5173
+- Production/Deploy:
+  - Mengikuti environment variable `PORT` (lihat pengaturan Nginx pada `nixpacks.toml`).
+
+## Skrip yang Tersedia (package.json)
+```bash
+# Frontend
+bun run dev            # Menjalankan Vite dev server
+bun run build          # Build aset produksi
+
+# Backend & layanan
+bun run serve          # php artisan serve
+bun run start-queue    # php artisan horizon
+bun run dev-websocket  # php artisan reverb:start --debug
+
+# Terintegrasi (disarankan untuk lokal)
+bun run start          # serve + dev + horizon + reverb (paralel)
+```
+
+## Build Produksi
+```powershell
+bun run build
+```
+Hasil build akan diproses oleh Laravel Vite Plugin. Pastikan variabel `APP_ENV=production` dan `APP_DEBUG=false` pada `.env` saat produksi.
+
+## Catatan Deploy (Nixpacks/Container)
+- Proses start menggunakan Nginx + PHP-FPM dengan binding ke `PORT` dari environment (lihat `nixpacks.toml`).
+- Perintah pasca build (otomatis):
+  - `php artisan optimize:clear`
+  - `php artisan storage:link`
+  - `php artisan migrate --force`
+
+## Struktur Build Frontend
+- Entry: `resources/css/app.css`, `resources/js/app.js` (lihat `vite.config.js`)
+- Alias path: `_/`, `@/` (JS), `~/` (CSS), `$/` (vendor)
+- Tailwind: `tailwind.config.js` dengan plugin Forms, Typography, DaisyUI, WireUI, dan ikon
+
+## Troubleshooting Singkat
+- Aset tidak termuat saat dev: pastikan `bun run dev` berjalan dan plugin Laravel Vite aktif, lalu refresh halaman Laravel di port 8000.
+- Error database: cek koneksi di `.env`. Untuk SQLite, pastikan path absolut di Windows sudah benar dan file `database.sqlite` dapat diakses.
+- WebSocket tidak tersambung: jalankan `php artisan reverb:start` (atau gunakan `bun run start`). Sesuaikan konfigurasi Reverb di `.env` bila diperlukan.
+- Antrean tidak diproses: pastikan Horizon aktif (`php artisan horizon`) dan queue driver sesuai (`QUEUE_CONNECTION` di `.env`).
+
+---
+
+Selamat mengembangkan! Jika ada pertanyaan internal tim, sertakan konfigurasi `.env` yang relevan (tanpa kredensial sensitif) saat melapor.
+

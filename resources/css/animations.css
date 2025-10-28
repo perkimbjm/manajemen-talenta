@@ -1,0 +1,50 @@
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-from-right {
+  from {
+    transform: translateX(50vw);
+  }
+}
+
+@keyframes slide-to-left {
+  to {
+    transform: translateX(-50vw);
+  }
+}
+
+@keyframes to-shadow {
+  to {
+    --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+}
+
+@keyframes to-compact {
+  to {
+    padding-top: var(--padding-top, 0.5rem);
+    padding-bottom: var(--padding-bottom, 0.5rem);
+  }
+}
+
+@keyframes to-top {
+  to {
+    top: var(--top, 0);
+  }
+}
+
+@keyframes to-transparent {
+  to {
+    opacity: var(--opacity, 0);
+  }
+}

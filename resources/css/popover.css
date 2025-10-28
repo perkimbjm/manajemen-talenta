@@ -1,0 +1,148 @@
+.popover,
+[popover] {
+  @apply fixed p-0 m-0 overflow-visible bg-transparent;
+}
+
+[popover]:where([data-placement='bottom'], :not([data-placement])) {
+  @apply !origin-top;
+}
+
+[popover]:where([data-placement='bottom-start'], [data-placement='right-start']) {
+  @apply !origin-top-left;
+}
+
+[popover]:where([data-placement='bottom-end'], [data-placement='left-start']) {
+  @apply !origin-top-right;
+}
+
+[popover]:where([data-placement='top']) {
+  @apply !origin-bottom;
+}
+
+[popover]:where([data-placement='top-start'], [data-placement='right-end']) {
+  @apply !origin-bottom-left;
+}
+
+[popover]:where([data-placement='top-end'], [data-placement='left-end']) {
+  @apply !origin-bottom-right;
+}
+
+[popover]:where([data-placement='right']) {
+  @apply !origin-left;
+}
+
+[popover]:where([data-placement='left']) {
+  @apply !origin-right;
+}
+
+.native-popover {
+  opacity: 0;
+  transform: scale(0.7);
+  z-index: 999;
+  transition: display 200ms, transform 200ms, opacity 200ms;
+  margin: auto;
+  max-width: calc(100vw - 2rem);
+
+  /* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+  position-try-fallbacks: --top-left;
+  transition-behavior: allow-discrete;
+}
+
+.native-popover:popover-open {
+  display: block;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.native-popover::backdrop {
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: opacity 1s;
+  pointer-events: none;
+}
+
+.native-popover:popover-open::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  .native-popover:popover-open {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+
+/* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+@supports (position-anchor: auto) {
+  .native-popover {
+    position: absolute;
+    margin: unset;
+  }
+
+  .native-popover:popover-open::backdrop {
+    opacity: 0;
+  }
+
+  .anchor-bottom-left {
+    inset: auto;
+    top: anchor(bottom);
+    left: anchor(left);
+    margin: 0.5rem 0 0 0;
+  }
+
+  .anchor-bottom-right {
+    inset: auto;
+    top: anchor(bottom);
+    right: anchor(right);
+    transform-origin: top right !important;
+    margin: 0.5rem 0 0 0;
+  }
+
+  .anchor-top-left {
+    inset: auto;
+    top: anchor(top);
+    left: anchor(left);
+    transform-origin: bottom left !important;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .anchor-top-right {
+    inset: auto;
+    top: anchor(top);
+    right: anchor(right);
+    transform-origin: bottom right !important;
+    margin: 0 0 0.5rem 0;
+  }
+
+  @position-try --bottom-left {
+    inset: auto;
+    top: anchor(bottom);
+    left: anchor(left);
+    margin: 0.5rem 0 0 0;
+  }
+
+  @position-try --bottom-right {
+    inset: auto;
+    top: anchor(bottom);
+    right: anchor(right);
+    transform-origin: top right !important;
+    margin: 0.5rem 0 0 0;
+  }
+
+  @position-try --top-left {
+    transform-origin: bottom left !important;
+    background-color: salmon;
+    inset: auto;
+    margin: 0 0 0.5rem 0;
+    bottom: anchor(top);
+    left: anchor(left);
+  }
+
+  @position-try --top-right {
+    inset: auto;
+    bottom: anchor(top);
+    right: anchor(right);
+    transform-origin: bottom right !important;
+    margin-right: 0;
+  }
+}

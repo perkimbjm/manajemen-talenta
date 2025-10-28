@@ -1,0 +1,38 @@
+[max-width="content"] {
+  @apply max-w-screen-sm;
+}
+
+[max-width="sm"],
+[max-width="content"]:has([max-width="sm"]) {
+  @apply sm:max-w-sm;
+}
+
+[max-width="md"],
+[max-width="content"]:has([max-width="md"]) {
+  @apply sm:max-w-md;
+}
+
+[max-width="lg"],
+[max-width="content"]:has([max-width="lg"]) {
+  @apply sm:max-w-lg;
+}
+
+[max-width="screen-sm"],
+[max-width="content"]:has([max-width="screen-sm"]) {
+  @apply max-w-screen-sm;
+}
+
+[max-width="screen-md"],
+[max-width="content"]:has([max-width="screen-md"]) {
+  @apply max-w-screen-md;
+}
+
+[max-width="screen-lg"],
+[max-width="content"]:has([max-width="screen-lg"]) {
+  @apply max-w-screen-lg;
+}
+
+[max-width="screen-xl"],
+[max-width="content"]:has([max-width="screen-xl"]) {
+  @apply max-w-screen-xl;
+}

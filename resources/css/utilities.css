@@ -1,0 +1,5 @@
+@import 'tailwindcss/utilities';
+
+[x-cloak] {
+  display: none;
+}

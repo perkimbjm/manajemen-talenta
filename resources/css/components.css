@@ -1,0 +1,79 @@
+@import 'tailwindcss/components';
+@import './max-width.css';
+@import './popover.css';
+
+.input:where(:not(.input-sm)) {
+  @apply flex w-full h-10 px-3 py-2 text-sm bg-white border border-neutral-300 ring-offset-base-100 placeholder:text-neutral-500 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/75 focus-within:ring-primary/75 focus-within:ring-2 focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.select {
+  @apply min-h-0 leading-none;
+}
+
+.select:where(:not(.select-sm)) {
+  @apply h-10;
+}
+
+.btn:where(:not(.btn-sm)) {
+  @apply h-auto px-3 py-2 text-sm font-medium tracking-wide transition-colors duration-200 w-max min-h-10 focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:outline-none;
+}
+
+/* Custom Sidebar Styles */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(71, 85, 105, 0.7);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(71, 85, 105, 0.9);
+}
+
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thumb-slate-600::-webkit-scrollbar-thumb {
+  background-color: rgb(71 85 105 / 0.7);
+}
+
+.scrollbar-thumb-slate-600::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(71 85 105 / 0.9);
+}
+
+/* Sidebar Animation Enhancement */
+.sidebar-overlay {
+  backdrop-filter: blur(8px);
+}
+
+/* Menu Item Hover Effects */
+.menu-item-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-item-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.menu-item-hover:hover::before {
+  left: 100%;
+}

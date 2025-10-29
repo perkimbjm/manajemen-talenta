@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Role;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -88,6 +87,21 @@ final class RoleTable extends PowerGridComponent
   public function actions(Role $row): array
   {
     return [
+      Button::add('permissions')
+        ->slot(
+          <<<'HTML'
+          <span class="i-mdi-shield-key-outline w-4 h-4 text-white"></span>
+          HTML
+        )
+        ->id()
+        ->class('btn btn-sm btn-primary py-1 px-2')
+        ->dispatch('show-modal', [
+          'component' => 'role-permission-form',
+          'title' => 'Kelola Hak Akses',
+          'arguments' => [
+            'role' => $row->id,
+          ]
+        ]),
       Button::add('edit')
         ->slot(
           <<<'HTML'

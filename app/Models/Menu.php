@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 class Menu extends Model
 {
@@ -155,7 +156,17 @@ class Menu extends Model
       ],
     ];
 
-    return $menu;
+    $user = Auth::user();
+
+    if (! $user) {
+      return $menu;
+    }
+
+    $permissionRoutes = PermissionRoute::with('permission')
+      ->get()
+      ->groupBy('route_name');
+
+    return static::filterMenuItems($menu, $user, $permissionRoutes);
   }
 
   public static function flatRoutes($menus = [])
@@ -165,5 +176,38 @@ class Menu extends Model
         return str($key)->endsWith('.route');
       })
       ->values();
+  }
+
+  protected static function filterMenuItems(array $menus, $user, $permissionRoutes)
+  {
+    return collect($menus)
+      ->map(function ($item) use ($user, $permissionRoutes) {
+        if (isset($item['route'])) {
+          $requiredPermissions = $permissionRoutes->get($item['route']);
+
+          if ($requiredPermissions && ! $user->hasRole('Super Admin')) {
+            $isAccessible = $requiredPermissions->contains(function ($routePermission) use ($user) {
+              return $user->can($routePermission->permission->name);
+            });
+
+            if (! $isAccessible) {
+              return null;
+            }
+          }
+        }
+
+        if (isset($item['items'])) {
+          $item['items'] = static::filterMenuItems($item['items'], $user, $permissionRoutes);
+
+          if (empty($item['items'])) {
+            return null;
+          }
+        }
+
+        return $item;
+      })
+      ->filter()
+      ->values()
+      ->toArray();
   }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Pages;
 
+use App\Models\Permission;
 use App\Models\Role;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -23,6 +24,25 @@ class RolePage extends Component
       $this->dispatch('notifications', [
         'type' => 'danger',
         'message' => 'Gagal menghapus role',
+        'description' => $th->getMessage(),
+      ]);
+    }
+  }
+
+  public function removePermission(Permission $permission)
+  {
+    try {
+      $permission->delete();
+
+      $this->dispatch('notifications', [
+        'type' => 'success',
+        'message' => 'Berhasil menghapus permission',
+      ]);
+      $this->dispatch('pg:eventRefresh-PermissionTable');
+    } catch (\Throwable $th) {
+      $this->dispatch('notifications', [
+        'type' => 'danger',
+        'message' => 'Gagal menghapus permission',
         'description' => $th->getMessage(),
       ]);
     }

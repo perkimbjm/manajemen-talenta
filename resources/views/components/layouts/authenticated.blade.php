@@ -1,6 +1,6 @@
 <x-layouts.app :title="@$title">
  <livewire:layout.sidebar />
- <div class="sidebar-forced:ml-0 md:ml-64 lg:ml-72">
+ <div class="main-content sidebar-forced:ml-0 md:ml-64 lg:ml-72 transition-all duration-300 ease-in-out">
   @if (isset($header))
    <x-header
     :class="$header->attributes->get('class', '')"

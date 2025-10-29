@@ -28,7 +28,8 @@ $clickable = ($url !== '#');
         @if ($clickable)
             <a
                 href="{{ $url }}"
-                class="group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200 hover:bg-white/10 hover:text-white active:scale-95"
+                title="{{ $title }}"
+                class="sidebar-link group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200 hover:bg-white/10 hover:text-white active:scale-95"
                 x-bind:class="{
                     'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white shadow-lg ring-1 ring-white/20': active,
                     'text-slate-300 hover:text-white': !active
@@ -44,8 +45,8 @@ $clickable = ($url !== '#');
             <div
                 role="link"
                 aria-disabled="true"
-                title="Coming soon"
-                class="group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200 cursor-not-allowed opacity-60"
+                title="{{ $title }} (Coming soon)"
+                class="sidebar-link group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200 cursor-not-allowed opacity-60"
                 x-bind:class="{
                     'bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white shadow-lg ring-1 ring-white/20': active,
                     'text-slate-300': !active
@@ -59,7 +60,7 @@ $clickable = ($url !== '#');
         @endif
 
         <!-- Icon/Image Container -->
-        <div class="relative flex-shrink-0">
+        <div class="sidebar-icon relative flex-shrink-0">
             @if (@$image)
                 <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 p-1.5 transition-colors group-hover:bg-white/20"
                      x-bind:class="{ 'bg-gradient-to-br from-blue-400/20 to-purple-400/20': active }">
@@ -78,16 +79,16 @@ $clickable = ($url !== '#');
             @endif
 
             <!-- Active Indicator -->
-            <div class="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-blue-400 opacity-0 transition-opacity" x-bind:class="{'opacity-100': active}"></div>
+            <div class="sidebar-active-indicator absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-blue-400 opacity-0 transition-opacity" x-bind:class="{'opacity-100': active}"></div>
         </div>
 
         <!-- Menu Text -->
-        <span class="flex-1 truncate transition-colors" x-bind:class="{'text-white font-semibold': active}">
+        <span class="sidebar-text flex-1 truncate transition-colors" x-bind:class="{'text-white font-semibold': active}">
             {{ $title }}
         </span>
 
         <!-- Hover Arrow -->
-        <i class="i-mdi-chevron-right h-4 w-4 opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-1" x-bind:class="{'opacity-100 translate-x-1': active}"></i>
+        <i class="sidebar-arrow i-mdi-chevron-right h-4 w-4 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100" x-bind:class="{'opacity-100 translate-x-1': active}"></i>
 
         @if ($clickable)
             </a>
@@ -100,12 +101,22 @@ $clickable = ($url !== '#');
             <!-- Submenu Toggle -->
             <button
                 type="button"
-                class="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200 hover:bg-white/10 hover:text-white"
+                class="sidebar-link flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200 hover:bg-white/10 hover:text-white"
                 x-bind:class="{ 'bg-white/10 text-white': open || active, 'text-slate-300': !open && !active }"
-                x-on:click="open = !open"
+                x-on:click="
+                    if (document.documentElement.classList.contains('sidebar-collapsed')) {
+                        window.dispatchEvent(new CustomEvent('sidebar-expand'));
+                        open = true;
+                        return;
+                    }
+
+                    open = !open
+                "
+                title="{{ $title }}"
+                x-bind:aria-expanded="open"
             >
                 <!-- Icon Container -->
-                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 transition-colors group-hover:bg-white/20" x-bind:class="{ 'bg-gradient-to-br from-blue-400/20 to-purple-400/20': open || active }">
+                <div class="sidebar-icon flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 transition-colors group-hover:bg-white/20" x-bind:class="{ 'bg-gradient-to-br from-blue-400/20 to-purple-400/20': open || active }">
                     @if (@$icon)
                         <span class="{{ $icon }} h-5 w-5"></span>
                     @else
@@ -114,17 +125,17 @@ $clickable = ($url !== '#');
                 </div>
 
                 <!-- Menu Text -->
-                <span class="flex-1 truncate text-left" x-bind:class="{'text-white font-semibold': open || active}">
+                <span class="sidebar-text flex-1 truncate text-left" x-bind:class="{'text-white font-semibold': open || active}">
                     {{ $title }}
                 </span>
 
                 <!-- Dropdown Arrow -->
-                <i class="i-mdi-chevron-down h-4 w-4 transition-transform duration-200" x-bind:class="{'rotate-180': open}"></i>
+                <i class="sidebar-arrow i-mdi-chevron-down h-4 w-4 transition-transform duration-200" x-bind:class="{'rotate-180': open}"></i>
             </button>
 
             <!-- Submenu Items -->
-            <div class="overflow-hidden transition-all duration-300" x-bind:style="open ? 'max-height: ' + ($refs.submenu.scrollHeight + 'px') : 'max-height: 0px'">
-                <ul class="mt-1 space-y-1 pl-11" x-ref="submenu">
+            <div class="sidebar-submenu-container overflow-hidden transition-all duration-300" x-bind:style="open ? 'max-height: ' + ($refs.submenu.scrollHeight + 'px') : 'max-height: 0px'">
+                <ul class="sidebar-submenu mt-1 space-y-1 pl-11" x-ref="submenu">
                     @foreach ($menus as $menu)
                         <li>
                             <x-sidebar.menu-item

@@ -24,6 +24,68 @@ new class extends Component {
  x-data="{
      show: false,
      forced: false,
+     collapsed: false,
+     lastDesktopCollapsed: false,
+     init() {
+         let stored = null;
+
+         try {
+             stored = window.localStorage.getItem('sidebar:collapsed');
+         } catch (error) {
+             stored = null;
+         }
+
+         this.lastDesktopCollapsed = stored === 'true';
+
+         if (window.innerWidth >= 768) {
+             this.collapsed = this.lastDesktopCollapsed;
+         }
+
+         this.syncCollapsedState(this.collapsed);
+
+         const resizeHandler = () => {
+             const isDesktop = window.innerWidth >= 768;
+
+             if (!isDesktop) {
+                 if (this.collapsed) {
+                     this.collapsed = false;
+                 }
+             } else {
+                 this.collapsed = this.lastDesktopCollapsed;
+             }
+
+             this.syncCollapsedState(this.collapsed);
+         };
+
+         window.addEventListener('resize', resizeHandler);
+
+         resizeHandler();
+
+         this.$nextTick(() => {
+             this.$el.addEventListener('alpine:destroy', () => {
+                 window.removeEventListener('resize', resizeHandler);
+             });
+         });
+
+         this.$watch('collapsed', (value) => {
+             this.syncCollapsedState(value);
+
+             if (window.innerWidth >= 768) {
+                 this.lastDesktopCollapsed = value;
+                 try {
+                     window.localStorage.setItem('sidebar:collapsed', value ? 'true' : 'false');
+                 } catch (error) {
+                     // no-op when storage is not available
+                 }
+             }
+         });
+     },
+     syncCollapsedState(value) {
+         const shouldCollapse = value && window.innerWidth >= 768;
+
+         document.documentElement.classList.toggle('sidebar-collapsed', shouldCollapse);
+         document.documentElement.classList.toggle('sidebar-expanded', !shouldCollapse);
+     }
  }"
  x-on:showsidebar.window="show = true"
  x-on:hidesidebar.window="(ev) => {
@@ -40,9 +102,11 @@ new class extends Component {
      show = !show
    }
  }"
+ x-on:sidebar-expand.window="if (window.innerWidth >= 768) { collapsed = false }"
  x-bind:open="show"
  x-bind:close="!show"
- x-bind:forced="forced",
+ x-bind:forced="forced"
+ x-bind:collapsed="collapsed && window.innerWidth >= 768"
 >
  <div
   class="fixed inset-0 z-50 bg-gray-900/50"
@@ -52,35 +116,50 @@ new class extends Component {
   x-on:click="show = false"
  ></div>
  <nav
-  class="sidebar-overlay fixed left-0 top-0 z-50 flex h-screen w-64 flex-col overflow-hidden bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 font-[sans-serif] text-white shadow-2xl transition-all duration-300 ease-in-out max-md:-translate-x-64 lg:w-72"
+  class="sidebar-overlay fixed left-0 top-0 z-50 flex h-screen w-64 flex-col overflow-hidden bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 font-[sans-serif] text-white shadow-2xl transition-all duration-300 ease-in-out max-md:-translate-x-64"
   x-bind:class="{
       '-translate-x-64 lg:-translate-x-72': !show && forced,
-      'max-md:!-translate-x-0': show
+      'max-md:!-translate-x-0': show,
+      'md:w-64 lg:w-72': !(collapsed && window.innerWidth >= 768),
+      'md:w-20 lg:w-24': collapsed && window.innerWidth >= 768
   }"
  >
-  <header class="sticky top-0 z-10 bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-5 shadow-lg">
-   <a
-    href="{{ route('landing') }}"
-    class="flex items-center gap-3 transition-transform duration-200 hover:scale-105"
-    x-vision
-   >
-    <div class="relative">
-     <img
-      src="{{ asset('images/logo.png') }}"
-      alt="Logo"
-      class="w-10 h-10 rounded-lg shadow-lg"
-     />
-     <div class="absolute -inset-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg blur opacity-25"></div>
-    </div>
-    <div>
-     <h3 class="text-xl font-bold text-white tracking-wide">MATA ASN-KU</h3>
-     <p class="text-xs text-blue-100 opacity-75">Management System</p>
-    </div>
-   </a>
+  <header class="sidebar-header sticky top-0 z-10 bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-5 shadow-lg">
+   <div class="flex items-center gap-3">
+    <a
+     href="{{ route('landing') }}"
+     class="group flex flex-1 items-center gap-3 transition-transform duration-200 hover:scale-105"
+     x-vision
+    >
+     <div class="relative">
+      <img
+       src="{{ asset('images/logo.png') }}"
+       alt="Logo"
+       class="h-10 w-10 rounded-lg shadow-lg"
+      />
+      <div class="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-400 to-purple-400 opacity-25 blur"></div>
+     </div>
+     <div class="sidebar-text">
+      <h3 class="text-xl font-bold tracking-wide text-white">MATA ASN-KU</h3>
+      <p class="text-xs text-blue-100 opacity-75">Management System</p>
+     </div>
+    </a>
+    <button
+     type="button"
+     class="hidden h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-white/80 transition-colors duration-200 hover:bg-white/20 md:flex"
+     x-on:click="collapsed = !collapsed"
+     x-bind:title="collapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'"
+    >
+     <i
+      class="i-mdi-chevron-double-right h-5 w-5 transition-transform duration-200"
+      x-bind:class="collapsed ? 'rotate-180' : ''"
+     ></i>
+    </button>
+   </div>
   </header>
 
   <!-- Navigation Menu -->
-  <div class="flex-1 overflow-y-auto px-3 py-4 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
+  <div class="sidebar-nav flex-1 overflow-y-auto px-3 py-4 scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
    <nav class="space-y-1">
     @foreach ($menus as $menu)
      @if (!@$menu['roles'] || $user->hasAnyRole($menu['roles']))
@@ -94,7 +173,7 @@ new class extends Component {
   </div>
 
   <!-- User Profile Section -->
-  <div class="sticky bottom-0 z-20 mt-auto border-t border-slate-600/50 bg-gradient-to-r from-slate-800/90 to-slate-700/90 backdrop-blur-sm">
+  <div class="sidebar-profile sticky bottom-0 z-20 mt-auto border-t border-slate-600/50 bg-gradient-to-r from-slate-800/90 to-slate-700/90 backdrop-blur-sm">
    <div class="relative p-4">
     <div class="flex items-center gap-3 mb-3">
      <div class="relative">

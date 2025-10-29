@@ -3,9 +3,9 @@
 <div class="mb-1">
  @if (!empty($menu['items']) && !@$menu['route'])
   <!-- Section Header -->
-  <div class="mb-2 px-4">
-   <h6 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">{{ $menu['title'] }}</h6>
-   <div class="mt-1 h-px bg-gradient-to-r from-slate-600 to-transparent"></div>
+  <div class="sidebar-section mb-2 px-4">
+   <h6 class="sidebar-section-title mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">{{ $menu['title'] }}</h6>
+   <div class="sidebar-section-divider h-px bg-gradient-to-r from-slate-600 to-transparent"></div>
   </div>
  @endif
  

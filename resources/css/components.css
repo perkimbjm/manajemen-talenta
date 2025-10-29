@@ -77,3 +77,53 @@
 .menu-item-hover:hover::before {
   left: 100%;
 }
+
+@layer base {
+  html.sidebar-collapsed .sidebar-text,
+  html.sidebar-collapsed .sidebar-section,
+  html.sidebar-collapsed .sidebar-section-title,
+  html.sidebar-collapsed .sidebar-section-divider,
+  html.sidebar-collapsed .sidebar-arrow,
+  html.sidebar-collapsed .sidebar-active-indicator,
+  html.sidebar-collapsed .sidebar-profile {
+    display: none;
+  }
+
+  html.sidebar-collapsed .sidebar-nav {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  html.sidebar-collapsed .sidebar-link {
+    justify-content: center;
+    gap: 0;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  html.sidebar-collapsed .sidebar-icon {
+    margin-right: 0;
+  }
+
+  html.sidebar-collapsed .sidebar-submenu-container {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    html.sidebar-collapsed .main-content {
+      margin-left: 5rem !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    html.sidebar-collapsed .main-content {
+      margin-left: 6rem !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    html.sidebar-collapsed .main-content {
+      margin-left: 0 !important;
+    }
+  }
+}

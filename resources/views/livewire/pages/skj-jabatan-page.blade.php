@@ -84,7 +84,7 @@
         file_type: file.type,
       })
     }))
-    
+
     $uppy.getPlugin('Dashboard').closeModal()
     this.positionId = null
   }
@@ -95,6 +95,9 @@
    <livewire:skj-jabatan-table :occupation_type="$occupation_type" />
   </div>
  </article>
+
+ <!-- Kamus Kompetensi Modal -->
+ <livewire:modal.kamus-kompetensi-modal />
 
  <template id="PositionStandardPreviewTemplate">
   <div

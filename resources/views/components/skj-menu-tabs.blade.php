@@ -37,7 +37,7 @@
  ];
 @endphp
 
-<div class="mx-auto w-full max-w-7xl overflow-x-auto bg-white px-4 pt-2 sm:px-6 lg:px-8">
+<div class="overflow-x-auto px-4 pt-2 mx-auto w-full max-w-7xl bg-white sm:px-6 lg:px-8">
  <div
   role="tablist"
   class="tabs tabs-lifted [&>.tab]:[--tab-bg:var(--fallback-b2,oklch(var(--b2)/1))]"

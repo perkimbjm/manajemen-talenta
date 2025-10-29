@@ -109,16 +109,28 @@ final class SkjStaffTable extends PowerGridComponent
       ->class($downloadDocumentClassess)
       ->tooltip('Download Dokumen');
 
+    $kamusBtn = Button::add('kamus')
+      ->tooltip('Kamus Kompetensi')
+      ->slot(<<<HTML
+        <i class="w-6 h-6 text-blue-500 i-mdi-book-open-page-variant"></i>
+      HTML)
+      ->class('btn btn-ghost btn-sm p-1')
+      ->dispatch('show-kamus-kompetensi', [
+        'positionName' => $row->name,
+        'apiType' => 'jfu'
+      ]);
+
     return [
       $downloadBtn,
       Button::add('upload')
         ->tooltip('Upload Dokumen')
         ->slot(<<<HTML
-            <i class="i-mdi-box-upload text-primary-light w-6 h-6"></i>
+            <i class="w-6 h-6 i-mdi-box-upload text-primary-light"></i>
           HTML)
         ->id()
         ->class('btn btn-ghost btn-sm p-1')
         ->dispatch('upload-document', ['rowId' => $row->id]),
+      $kamusBtn,
     ];
   }
 

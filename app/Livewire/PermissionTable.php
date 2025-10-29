@@ -105,7 +105,7 @@ final class PermissionTable extends PowerGridComponent
                 ->class('btn btn-sm btn-accent py-1 px-2')
                 ->dispatch('show-modal', [
                     'component' => 'permission-route-form',
-                    'title' => 'Atur Route Permission',
+                    'title' => 'Atur Route Permissions',
                     'arguments' => [
                         'permission' => $row->id,
                     ]

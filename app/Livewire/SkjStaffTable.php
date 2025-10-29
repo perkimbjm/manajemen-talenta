@@ -116,8 +116,8 @@ final class SkjStaffTable extends PowerGridComponent
       HTML)
       ->class('btn btn-ghost btn-sm p-1')
       ->dispatch('show-kamus-kompetensi', [
-        'positionName' => $row->name,
-        'apiType' => 'jfu'
+        'name' => $row->name,
+        'apiType' => 'jfu',
       ]);
 
     return [

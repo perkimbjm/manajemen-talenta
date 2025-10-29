@@ -25,8 +25,8 @@ class KamusKompetensiModal extends Component
     #[On('show-kamus-kompetensi')]
     public function showModal(array $data = [])
     {
-        $this->name = $data['name'] ?? '';
-        $this->apiType = $data['apiType'] ?? 'Fungsional';
+        $this->name = trim($data['name'] ?? $data['positionName'] ?? '');
+        $this->apiType = $data['apiType'] ?? 'jft';
         $this->showModal = true;
         $this->fetchCompetencyData();
     }
@@ -40,23 +40,26 @@ class KamusKompetensiModal extends Component
 
     private function fetchCompetencyData()
     {
-        if (empty($this->name)) {
+        $this->name = trim($this->name);
+
+        if ($this->name === '') {
             return;
         }
 
         $this->loading = true;
 
-        $cacheKey = "kamus_kompetensi_modal_{$this->apiType}_{$this->name}";
+        $cacheKey = sprintf(
+            'kamus_kompetensi_modal_%s_%s',
+            $this->apiType,
+            md5($this->name)
+        );
         $this->competencyData = Cache::remember($cacheKey, now()->addMinutes(30), function () {
             try {
                 $url = $this->apiType === 'jft'
                     ? 'https://api-kesejahteraan.bkn.go.id/sikejab/jft'
                     : 'https://api-kesejahteraan.bkn.go.id/sikejab/jfu';
 
-                // Try exact match first
-                // URL encode the position name to handle spaces and special characters
-                $encodedName = urlencode($this->name);
-                $fullUrl = $url . '?nama=' . $encodedName . '&offset=0';
+                $fullUrl = $url . '?nama=' . urlencode($this->name) . '&offset=0';
 
                 // Log the URL being called
                 Log::info('Kamus Kompetensi API Call', [
@@ -66,7 +69,7 @@ class KamusKompetensiModal extends Component
                 ]);
 
                 $response = Http::timeout(30)->get($url, [
-                    'nama' => $encodedName,
+                    'nama' => $this->name,
                     'offset' => 0
                 ]);
 
@@ -77,7 +80,7 @@ class KamusKompetensiModal extends Component
                     // If no exact match, try partial search with first word
                     if (empty($results)) {
                         $words = explode(' ', $this->name);
-                        $searchTerm = urlencode($words[0]); // URL encode first word
+                        $searchTerm = $words[0];
 
                         $response = Http::timeout(30)->get($url, [
                             'nama' => $searchTerm,

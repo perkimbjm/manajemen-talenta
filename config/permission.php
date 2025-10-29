@@ -158,6 +158,28 @@ return [
      */
   // 'permission.wildcard_permission' => Spatie\Permission\WildcardPermission::class,
 
+  'route_descriptions' => [
+    'dashboard' => 'Halaman ringkasan utama yang menampilkan metrik dan informasi penting.',
+    'analytics.performance' => 'Laporan performa organisasi untuk analisis mendalam.',
+    'analytics.employees' => 'Statistik pegawai berdasarkan data terbaru.',
+    'features.skj' => 'Akses ke modul Standar Kompetensi Jabatan.',
+    'features.assessment-center' => 'Menampilkan fitur Assessment Center.',
+    'features.manja' => 'Mengelola data dan visualisasi Sumbu Kinerja.',
+    'features.asn-potensial' => 'Mengelola data Sumbu Potensial ASN.',
+    'features.profil-talenta-asn' => 'Profil detail talenta ASN.',
+    'features.talent-pool' => 'Pengelolaan dan pemantauan Talent Pool.',
+    'employees.profile' => 'Daftar dan detail profil pegawai.',
+    'employees.documents' => 'Pengelolaan berkas dan dokumen pegawai.',
+    'master.skp' => 'Data master nilai SKP.',
+    'master.attendances' => 'Pengaturan data kehadiran.',
+    'master.employees' => 'Data master pegawai.',
+    'master.units' => 'Manajemen data SKPD/unit kerja.',
+    'settings.users' => 'Pengaturan pengguna dan akun sistem.',
+    'settings.roles' => 'Pengaturan roles dan permissions.',
+    'settings.system' => 'Konfigurasi sistem dan preferensi.',
+    'settings.backup' => 'Fitur backup dan restore data.',
+  ],
+
   /* Cache-specific settings */
 
   'cache' => [

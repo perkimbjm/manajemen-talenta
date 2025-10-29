@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Permission;
 use Illuminate\Support\Facades\Route as RouteFacade;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -14,6 +15,7 @@ class PermissionRouteForm extends Component
     public array $selectedRoutes = [];
     public array $routes = [];
     public string $search = '';
+    public array $routeDescriptions = [];
 
     public function mount()
     {
@@ -24,6 +26,7 @@ class PermissionRouteForm extends Component
 
         $this->routes = array_values(array_unique(array_merge($this->routes, $selected)));
         $this->selectedRoutes = $selected;
+        $this->routeDescriptions = config('permission.route_descriptions', []);
     }
 
     #[Computed]
@@ -60,6 +63,36 @@ class PermissionRouteForm extends Component
 
         $this->dispatch('close-modal');
         $this->dispatch('pg:eventRefresh-PermissionTable');
+    }
+
+    public function selectAll(): void
+    {
+        $this->selectedRoutes = collect($this->routes)
+            ->map(fn ($route) => (string) $route)
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    public function deselectAll(): void
+    {
+        $this->selectedRoutes = [];
+    }
+
+    public function descriptionFor(string $route): string
+    {
+        $description = $this->routeDescriptions[$route] ?? null;
+
+        if ($description) {
+            return $description;
+        }
+
+        $label = Str::of($route)
+            ->replace('.', ' ')
+            ->replace('-', ' ')
+            ->headline();
+
+        return sprintf('Mengatur akses ke route %s.', $label);
     }
 
     public function render()

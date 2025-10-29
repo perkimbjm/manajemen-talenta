@@ -37,7 +37,7 @@ final class PermissionTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Permission::query()->withCount('routeAccess');
+        return Permission::query();
     }
 
     public function relationSearch(): array
@@ -51,7 +51,7 @@ final class PermissionTable extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('guard_name')
-            ->add('route_access_count', fn (Permission $permission) => $permission->route_access_count)
+            ->add('routes_count', fn (Permission $permission) => count($permission->routes ?? []))
             ->add('created_at')
             ->add('updated_at');
     }
@@ -67,7 +67,7 @@ final class PermissionTable extends PowerGridComponent
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Jumlah Route', 'route_access_count'),
+            Column::make('Jumlah Route', 'routes_count'),
 
             Column::make('Created at', 'created_at')
                 ->sortable()

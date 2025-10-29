@@ -18,7 +18,9 @@ class PermissionRouteForm extends Component
     public function mount()
     {
         $this->routes = $this->availableRoutes();
-        $selected = $this->permission->routeAccess()->pluck('route_name')->map(fn ($name) => (string) $name)->toArray();
+        $selected = collect($this->permission->routes)
+            ->map(fn ($name) => (string) $name)
+            ->toArray();
 
         $this->routes = array_values(array_unique(array_merge($this->routes, $selected)));
         $this->selectedRoutes = $selected;
@@ -47,13 +49,9 @@ class PermissionRouteForm extends Component
             ->unique()
             ->values();
 
-        $this->permission->routeAccess()->delete();
-
-        $routes->each(function ($route) {
-            $this->permission->routeAccess()->create([
-                'route_name' => $route,
-            ]);
-        });
+        $this->permission->update([
+            'routes' => $routes->all(),
+        ]);
 
         $this->dispatch('notifications', [
             'type' => 'success',

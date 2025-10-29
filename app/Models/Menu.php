@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Arr;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
 
 class Menu extends Model
 {
@@ -162,9 +163,7 @@ class Menu extends Model
       return $menu;
     }
 
-    $permissionRoutes = PermissionRoute::with('permission')
-      ->get()
-      ->groupBy('route_name');
+    $permissionRoutes = static::mapRoutePermissions();
 
     return static::filterMenuItems($menu, $user, $permissionRoutes);
   }
@@ -178,16 +177,22 @@ class Menu extends Model
       ->values();
   }
 
-  protected static function filterMenuItems(array $menus, $user, $permissionRoutes)
+  /**
+   * @param  array<string, mixed>[]  $menus
+   * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+   * @param  array<string, Collection<Permission>>  $permissionRoutes
+   */
+  protected static function filterMenuItems(array $menus, $user, array $permissionRoutes)
   {
     return collect($menus)
       ->map(function ($item) use ($user, $permissionRoutes) {
         if (isset($item['route'])) {
-          $requiredPermissions = $permissionRoutes->get($item['route']);
+          /** @var Collection<Permission> $requiredPermissions */
+          $requiredPermissions = $permissionRoutes[$item['route']] ?? collect();
 
-          if ($requiredPermissions && ! $user->hasRole('Super Admin')) {
-            $isAccessible = $requiredPermissions->contains(function ($routePermission) use ($user) {
-              return $user->can($routePermission->permission->name);
+          if ($requiredPermissions->isNotEmpty() && ! $user->hasRole('Super Admin')) {
+            $isAccessible = $requiredPermissions->contains(function (Permission $permission) use ($user) {
+              return $user->can($permission->name);
             });
 
             if (! $isAccessible) {
@@ -209,5 +214,28 @@ class Menu extends Model
       ->filter()
       ->values()
       ->toArray();
+  }
+
+  /**
+   * @return array<string, Collection<Permission>>
+   */
+  protected static function mapRoutePermissions(): array
+  {
+    return Permission::query()
+      ->get()
+      ->reduce(function ($carry, Permission $permission) {
+        $routes = collect($permission->routes)
+          ->filter()
+          ->map(fn ($route) => (string) $route);
+
+        foreach ($routes as $route) {
+          /** @var Collection<Permission> $collection */
+          $collection = $carry[$route] ?? collect();
+          $collection->push($permission);
+          $carry[$route] = $collection;
+        }
+
+        return $carry;
+      }, []);
   }
 }

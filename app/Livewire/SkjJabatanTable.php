@@ -109,6 +109,8 @@ final class SkjJabatanTable extends PowerGridComponent
       ->class($downloadDocumentClassess)
       ->tooltip('Download Dokumen');
 
+    $apiType = strtolower($row->type ?? '') === 'pelaksana' ? 'jfu' : 'jft';
+
     $kamusBtn = Button::add('kamus')
       ->tooltip('Kamus Kompetensi')
       ->slot(<<<HTML
@@ -116,8 +118,9 @@ final class SkjJabatanTable extends PowerGridComponent
       HTML)
       ->class('btn btn-ghost btn-sm p-1')
       ->dispatch('show-kamus-kompetensi', [
-        'positionName' => $row->name,
-        'apiType' => 'jft'
+        'name' => $row->name,
+        'apiType' => $apiType,
+        'type' => $row->type,
       ]);
 
     return [

@@ -61,11 +61,18 @@ class KamusKompetensiModal extends Component
 
                 $fullUrl = $url . '?nama=' . urlencode($this->name) . '&offset=0';
 
-                // Log the URL being called
+                // Log the URL being called on the server for reference
                 Log::info('Kamus Kompetensi API Call', [
                     'url' => $fullUrl,
                     'position_name' => $this->name,
-                    'api_type' => $this->apiType
+                    'api_type' => $this->apiType,
+                ]);
+
+                // Dispatch browser event so developers can inspect the URL via console
+                $this->dispatch('kamus-kompetensi-url', [
+                    'url' => $fullUrl,
+                    'position_name' => $this->name,
+                    'api_type' => $this->apiType,
                 ]);
 
                 $response = Http::timeout(30)->get($url, [

@@ -140,7 +140,7 @@ new class extends Component {
       <div class="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-400 to-purple-400 opacity-25 blur"></div>
      </div>
      <div class="sidebar-text">
-      <h3 class="text-xl font-bold tracking-wide text-white">MATA ASN-KU</h3>
+      <h3 class="font-bold tracking-wide text-white">MATA ASN-KU</h3>
       <p class="text-xs text-blue-100 opacity-75">Management System</p>
      </div>
     </a>
@@ -186,7 +186,7 @@ new class extends Component {
       </div>
       <div class="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 border-2 border-slate-800 rounded-full"></div>
      </div>
-     
+
      <div class="flex-1 min-w-0">
       <p class="text-sm font-semibold text-white truncate" title="{{ $user->name }}">
        {{ $user->name }}
@@ -200,14 +200,14 @@ new class extends Component {
       </div>
      </div>
     </div>
-    
+
     <!-- Action Buttons -->
     <div class="flex gap-2">
      <a href="#" class="flex-1 bg-slate-700/50 hover:bg-slate-600/50 rounded-lg px-3 py-2 text-xs text-center text-slate-300 hover:text-white transition-colors duration-200">
       <i class="i-mdi-account-edit w-4 h-4 mx-auto mb-1"></i>
       Profile
      </a>
-     
+
      <form
       action="{{ route('logout') }}"
       method="POST"

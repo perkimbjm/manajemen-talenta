@@ -11,12 +11,12 @@ window.flatpickr = flatpickr;
 window.TomSelect = TomSelect;
 
 window.addEventListener("kamus-kompetensi-url", (event) => {
-        const detail = event?.detail ?? {};
-        const { url, position_name: positionName, api_type: apiType } = detail;
+    const detail = event?.detail ?? {};
+    const { url, position_name: positionName, api_type: apiType } = detail;
 
-        console.groupCollapsed("Kamus Kompetensi API Call");
-        console.log("URL:", url);
-        console.log("Position Name:", positionName);
-        console.log("API Type:", apiType);
-        console.groupEnd();
+    console.groupCollapsed("Kamus Kompetensi API Call");
+    console.log("URL:", url);
+    console.log("Position Name:", positionName);
+    console.log("API Type:", apiType);
+    console.groupEnd();
 });

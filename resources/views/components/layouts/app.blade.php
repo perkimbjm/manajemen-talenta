@@ -20,21 +20,22 @@
   href="https://fonts.bunny.net"
  >
  <link
-  href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
+ href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
   rel="stylesheet"
  >
 
+ @wireUiStyles
+
  <!-- Scripts -->
- <wireui:scripts />
- <link
-  href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css"
-  rel="stylesheet"
- >
- @vite(['resources/css/app.css', 'resources/js/app.js'])
+  <link
+   href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css"
+   rel="stylesheet"
+  >
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body
- class="bg-base-200 font-sans text-base-content antialiased"
+ class="font-sans antialiased bg-base-200 text-base-content"
  data-theme="light"
  x-init
  x-data
@@ -55,6 +56,7 @@
   z-index="z-50"
   blur="md"
   align="center"
+  x-data="{ open: false }"
  />
 
  <livewire:dynamic-modal />
@@ -62,6 +64,7 @@
  <livewire:confirm-dialog />
 
  <x-notifications z-index="z-50" />
+ <wireui:scripts />
 </body>
 
 </html>
